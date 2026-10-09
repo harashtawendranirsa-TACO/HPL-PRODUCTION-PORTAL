@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TAC PRODUCTION HPL PORTAL</title>
+
+  <!-- Bootstrap 5.3, Bootstrap Icons, & Anime.js CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+  <style>
+    :root {
+      --taco-orange: #DC440A;
+      --taco-dark: #222423;
+      --taco-blue: #00A3DE;
+      --taco-bg: #F8F9FA;
+    }
+
+    body {
+      font-family: 'DIN Pro', 'Roboto', 'Segoe UI', 'Verdana', sans-serif;
+      background-color: var(--taco-bg);
+      color: var(--taco-dark);
+      padding-bottom: 4rem;
+      overflow-x: hidden;
+    }
+
+    /* SPLASH SCREEN */
+    #splashScreen {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: #ffffff; z-index: 9999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .splash-card { text-align: center; max-width: 450px; padding: 2rem; width: 100%; }
+    .splash-user-badge {
+      background-color: #F1F5F9; border: 1px solid #E2E8F0; color: var(--taco-dark);
+      border-radius: 30px; padding: 0.5rem 1.25rem; font-size: 0.9rem; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .splash-progress-track {
+      width: 100%; height: 4px; background-color: #E2E8F0; border-radius: 2px;
+      overflow: hidden; margin-top: 1.5rem;
+    }
+    .splash-progress-bar { width: 0%; height: 100%; background-color: var(--taco-orange); }
+
+    .taco-navbar { background-color: #ffffff !important; border-bottom: 1px solid #E2E8F0; padding: 0.85rem 1.75rem; }
+
+    /* CARDS */
+    .featured-card-container { border: 2px solid var(--card-theme, var(--taco-orange)) !important; background: linear-gradient(135deg, #ffffff 0%, var(--card-bg, #FFF5F2) 100%); }
+    .featured-badge { background-color: var(--card-theme, var(--taco-orange)); color: #ffffff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; padding: 0.35rem 0.75rem; border-radius: 20px; text-transform: uppercase; }
+
+    .home-category-card { background: #ffffff; border: 1px solid #E2E8F0; border-radius: 14px; padding: 1.75rem; height: 100%; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: all 0.25s ease; text-decoration: none; color: var(--taco-dark); }
+    .home-category-card:hover { transform: translateY(-4px); box-shadow: 0 10px 22px rgba(0,0,0,0.06); border-color: var(--card-theme, var(--taco-dark)); }
+    .category-avatar { width: 52px; height: 52px; border-radius: 12px; background-color: var(--card-bg, #F8FAFC); border: 1px solid var(--card-border, #E2E8F0); color: var(--card-theme, var(--taco-dark)); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+
+    .app-card-container { border: 1px solid #E2E8F0; border-radius: 12px; background: #ffffff; height: 100%; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
+    .app-card-container:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-color: var(--taco-orange); }
+    .card-header-link { text-decoration: none; color: var(--taco-dark); padding: 1.25rem; display: block; }
+    .card-icon-avatar { width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+
+    .avatar-dashboard { background-color: #FFF5F2; color: var(--taco-orange); }
+    .avatar-database { background-color: #F0F9FF; color: var(--taco-blue); }
+    .badge-dashboard { background-color: var(--taco-orange); color: #ffffff; }
+    .badge-database { background-color: var(--taco-blue); color: #ffffff; }
+
+    .btn-sneak-peek-toggle { background-color: #ffffff; border: 1px solid #E2E8F0; border-radius: 6px; font-size: 0.78rem; font-weight: 700; color: #475569; padding: 0.45rem 0.75rem; transition: all 0.2s ease; }
+    .btn-sneak-peek-toggle:hover { background-color: #FFF5F2; border-color: var(--taco-orange); color: var(--taco-orange); }
+    .sneak-peek-box { background-color: #F8FAFC; border: 1px dashed #E2E8F0; border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.83rem; color: #475569; white-space: pre-line; text-align: left; line-height: 1.5; margin-top: 0.5rem; }
+    
+    .btn-back-home { border: 1px solid #CBD5E1; background-color: #ffffff; color: var(--taco-dark); font-weight: 600; padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s ease; }
+    .btn-back-home:hover { background-color: var(--taco-dark); color: #ffffff; }
+
+    /* ACCESS DENIED SPECIFIC */
+    .denied-card { background: #ffffff; border: 1px solid #E2E8F0; border-radius: 12px; max-width: 500px; width: 100%; padding: 2.5rem; margin: 0 auto; margin-top: 10vh;}
+  </style>
+</head>
+<body>
+
+  <!-- SPLASH SCREEN -->
+  <div id="splashScreen">
+    <div class="splash-card">
+      <img id="splashLogo" src="https://www.taco.co.id/_next/static/media/taco-icon.ceec1a53.svg" alt="TACO Logo" height="65" class="mb-3" style="opacity: 0;">
+      <h3 id="splashTitle" class="fw-bold mb-1" style="color: var(--taco-dark); opacity: 0;">TAC PRODUCTION HPL PORTAL</h3>
+      <p id="splashSubtitle" class="text-muted small mb-3" style="opacity: 0;">TACO High Pressure Laminates Plant</p>
+      
+      <div id="splashUserCard" class="splash-user-badge shadow-sm mb-3" style="opacity: 0;">
+        <i class="bi bi-person-circle text-danger me-1"></i>
+        <span id="splashUserEmail">Authenticating...</span>
+      </div>
+
+      <div class="splash-progress-track">
+        <div id="splashProgressBar" class="splash-progress-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP CONTAINER (HIDDEN INITIALLY) -->
+  <div id="appContainer" style="display: none;">
+    <nav class="navbar taco-navbar sticky-top shadow-sm mb-4">
+      <div class="container-fluid d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <span class="fs-4 fw-bold" style="color: var(--taco-dark);">TAC PRODUCTION HPL PORTAL</span>
+          <span class="badge d-none d-md-inline-block" style="background-color: var(--taco-dark); color: #ffffff;">
+            <i class="bi bi-person-circle me-1"></i><span id="navUserEmail"></span>
+          </span>
+        </div>
+        <div class="d-flex align-items-center">
+          <img src="https://www.taco.co.id/_next/static/media/taco-icon.ceec1a53.svg" alt="TACO Logo" height="38">
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid px-4">
+      <div class="row mb-4 justify-content-between align-items-center" id="viewHeaderBar"></div>
+      <div id="pageContent"></div>
+    </div>
+  </div>
+
+  <!-- ACCESS DENIED CONTAINER (HIDDEN INITIALLY) -->
+  <div id="deniedContainer" style="display: none; height: 100vh;">
+    <nav class="navbar taco-navbar shadow-sm">
+      <div class="container-fluid d-flex align-items-center justify-content-between">
+        <span class="fs-4 fw-bold" style="color: var(--taco-dark);">TAC PRODUCTION HPL PORTAL</span>
+        <img src="https://www.taco.co.id/_next/static/media/taco-icon.ceec1a53.svg" alt="TACO Logo" height="38">
+      </div>
+    </nav>
+    <div class="container d-flex align-items-center justify-content-center">
+      <div class="denied-card text-center shadow-sm">
+        <div class="mb-3"><i class="bi bi-shield-lock-fill text-danger" style="font-size: 3.5rem;"></i></div>
+        <h3 class="fw-bold mb-2">Access Restricted</h3>
+        <p class="text-muted mb-4">Your account is not registered on the TACO Production Portal whitelist.</p>
+        
+        <div class="p-3 bg-light rounded border mb-4 text-start">
+          <small class="text-muted d-block fw-semibold">Logged in as:</small>
+          <span class="fw-bold text-dark text-break" id="deniedUserEmail"></span>
+        </div>
+
+        <p class="small text-secondary mb-0">If you require access to production dashboards, please contact your Plant Administrator or IT department to add your email to the access list.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ IMPORTANT: PASTE YOUR DEPLOYED WEB APP URL HERE ⚠️
+    const GOOGLE_API_URL = "https://script.google.com/a/macros/taco.co.id/s/AKfycbzz3yhrdI_IHA2bdkkH1lbdIwi5Wdx3SGcOLsX1f5h2Rm1tNz5UpVcZlzBXWD-GHHb3/exec";
+    
+    let GLOBAL_PORTAL_DATA = [];
+    let CURRENT_VIEW = "HOME";
+    let isDataLoaded = false;
+    let minSplashTimeReached = false;
+
+    // THEME HELPER BASED ON TITLE
+    function getTheme(title) {
+      const t = (title || "").toLowerCase();
+      if (t.includes("plant") || t.includes("level")) return { theme: '#00A3DE', bg: '#F0F9FF', border: '#BAE6FD' }; // Blue
+      if (t.includes("qual") || t.includes("monitor")) return { theme: '#8B5CF6', bg: '#F5F3FF', border: '#DDD6FE' }; // Purple
+      if (t.includes("treat")) return { theme: '#0284C7', bg: '#E0F2FE', border: '#7DD3FC' }; // Cyan
+      if (t.includes("press")) return { theme: '#DC440A', bg: '#FFF5F2', border: '#FED7AA' }; // Orange
+      if (t.includes("finish")) return { theme: '#10B981', bg: '#ECFDF5', border: '#A7F3D0' }; // Emerald
+      return { theme: '#475569', bg: '#F8FAFC', border: '#E2E8F0' }; // Slate default
+    }
+
+    // SPLASH ANIMATION
+    function runSplashAnimation() {
+      const timeline = anime.timeline({ easing: 'easeOutExpo' });
+      timeline
+        .add({ targets: '#splashLogo', opacity: [0, 1], scale: [0.6, 1], duration: 800 })
+        .add({ targets: ['#splashTitle', '#splashSubtitle'], opacity: [0, 1], translateY: [20, 0], duration: 600, delay: anime.stagger(150) }, '-=400')
+        .add({ targets: '#splashUserCard', opacity: [0, 1], scale: [0.9, 1], duration: 500 }, '-=300')
+        .add({
+          targets: '#splashProgressBar', width: ['0%', '100%'], duration: 1200, easing: 'easeInOutQuad',
+          complete: function() { minSplashTimeReached = true; tryDismissSplash(); }
+        }, '-=200');
+    }
+
+    function tryDismissSplash() {
+      if (isDataLoaded && minSplashTimeReached) {
+        anime({
+          targets: '#splashScreen', opacity: [1, 0], scale: [1, 1.05], duration: 600, easing: 'easeInOutQuad',
+          complete: function() { document.getElementById('splashScreen').style.display = 'none'; }
+        });
+      }
+    }
+
+    function formatSummaryText(text) {
+      if (!text) return '';
+      let formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color: var(--taco-dark);">$1</strong>');
+      formatted = formatted.replace(/^[\*\-\•]\s*/gm, '• ');
+      return formatted;
+    }
+
+    function toggleSneakPeek(btn) {
+      const container = btn.closest('.app-card-container');
+      const peekBox = container.querySelector('.sneak-peek-box');
+      const icon = btn.querySelector('.toggle-icon');
+
+      if (peekBox.classList.contains('d-none')) {
+        peekBox.classList.remove('d-none');
+        icon.classList.replace('bi-chevron-down', 'bi-chevron-up');
+      } else {
+        peekBox.classList.add('d-none');
+        icon.classList.replace('bi-chevron-up', 'bi-chevron-down');
+      }
+    }
+
+    // ==========================================
+    // JSONP API FETCHING
+    // ==========================================
+    function fetchPortalDataJSONP() {
+      // JSONP bypasses CORS issues when hosting frontend external to Google
+      const script = document.createElement('script');
+      const callbackName = 'jsonpCallback_' + Math.round(100000 * Math.random());
+      
+      window[callbackName] = function(data) {
+        delete window[callbackName];
+        document.body.removeChild(script);
+        handleAPIResponse(data);
+      };
+      
+      script.src = GOOGLE_API_URL + (GOOGLE_API_URL.includes('?') ? '&' : '?') + 'callback=' + callbackName;
+      script.onerror = function() {
+        handleError("Failed to fetch data from API. Check URL and permissions.");
+      };
+      document.body.appendChild(script);
+    }
+
+    function handleAPIResponse(response) {
+      // Update UI Emails
+      document.getElementById('splashUserEmail').textContent = response.email || "No Email Detected";
+      document.getElementById('navUserEmail').textContent = response.email || "No Email Detected";
+      document.getElementById('deniedUserEmail').textContent = response.email || "No Email Detected";
+
+      if (!response.authorized) {
+        // Show Denied Screen
+        document.getElementById('appContainer').style.display = 'none';
+        document.getElementById('deniedContainer').style.display = 'block';
+        isDataLoaded = true;
+        tryDismissSplash();
+      } else {
+        // Show Main App
+        GLOBAL_PORTAL_DATA = response.data || [];
+        document.getElementById('deniedContainer').style.display = 'none';
+        document.getElementById('appContainer').style.display = 'block';
+        isDataLoaded = true;
+        tryDismissSplash();
+        renderHomeView();
+      }
+    }
+
+    function findDirectLinkData(matchKey) {
+      for (let sec of GLOBAL_PORTAL_DATA) {
+        if (sec.sectionTitle.toLowerCase() === matchKey.toLowerCase()) {
+          for (let sub of sec.subAreas) {
+            if (sub.links.length > 0) return sub.links[0];
+          }
+        }
+      }
+      return { url: "#", summary: "" };
+    }
+
+    // ==========================================
+    // TIER 1: RENDER HOME LANDING VIEW
+    // ==========================================
+    function renderHomeView() {
+      CURRENT_VIEW = "HOME";
+
+      const headerBar = document.getElementById('viewHeaderBar');
+      headerBar.innerHTML = `
+        <div class="col-md-8">
+          <h3 class="fw-bold m-0" style="color: var(--taco-dark);">HPL Factory Control Center</h3>
+          <p class="text-muted small m-0">Direct access to plant-wide monitors & dedicated section tools.</p>
+        </div>
+      `;
+
+      const contentContainer = document.getElementById('pageContent');
+      contentContainer.innerHTML = '';
+
+      let directCardsHTML = '';
+      let deptCardsHTML = '';
+
+      GLOBAL_PORTAL_DATA.forEach(sec => {
+        const style = getTheme(sec.sectionTitle);
+
+        if (sec.tier === 'TIER 1') {
+          // FEATURED DIRECT CARD
+          const linkData = findDirectLinkData(sec.sectionTitle);
+          const directUrl = linkData.url || "#";
+          const summaryText = linkData.summary || "";
+
+          let summaryFooterHTML = '';
+          if (summaryText && summaryText.trim().length > 0) {
+            summaryFooterHTML = `
+              <div class="px-3 pb-3">
+                <button class="btn btn-sneak-peek-toggle w-100 d-flex align-items-center justify-content-between shadow-sm" onclick="toggleSneakPeek(this)">
+                  <span class="d-flex align-items-center gap-1">
+                    <i class="bi bi-stars" style="color: ${style.theme};"></i>
+                    <span>Daily Sneak Peek</span>
+                  </span>
+                  <i class="bi bi-chevron-down toggle-icon"></i>
+                </button>
+                <div class="sneak-peek-box d-none">${formatSummaryText(summaryText)}</div>
+              </div>
+            `;
+          } else {
+            summaryFooterHTML = `
+              <div class="px-3 pb-3">
+                <div class="sneak-peek-box text-muted fst-italic mt-0">
+                  <small><i class="bi bi-info-circle me-1"></i>Click card header to open live view.</small>
+                </div>
+              </div>
+            `;
+          }
+
+          directCardsHTML += `
+            <div class="col-12 col-md-6 mb-4">
+              <div class="app-card-container featured-card-container shadow-sm" style="--card-theme: ${style.theme}; --card-bg: ${style.bg};">
+                <a href="${directUrl}" target="_blank" class="card-header-link">
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="category-avatar" style="background-color: ${style.theme}; color: #ffffff;">
+                      <i class="bi ${sec.icon}"></i>
+                    </div>
+                    <span class="featured-badge"><i class="bi bi-box-arrow-up-right me-1"></i> Direct Launch</span>
+                  </div>
+                  <h4 class="fw-bold mb-2">${sec.sectionTitle}</h4>
+                  <p class="text-muted small mb-0">${sec.description || 'Launch executive dashboard'}</p>
+                </a>
+                ${summaryFooterHTML}
+              </div>
+            </div>
+          `;
+        } else {
+          // DEPARTMENT SECTION CARD (TIER 2)
+          deptCardsHTML += `
+            <div class="col-12 col-md-4 mb-4">
+              <div class="home-category-card shadow-sm" style="--card-theme: ${style.theme}; --card-bg: ${style.bg}; --card-border: ${style.border};" onclick="openSectionDetail('${sec.sectionTitle}')">
+                <div>
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="category-avatar"><i class="bi ${sec.icon}"></i></div>
+                    <span class="badge bg-light text-dark border">${sec.subAreas.length} Sub-unit(s)</span>
+                  </div>
+                  <h5 class="fw-bold mb-2">${sec.sectionTitle}</h5>
+                  <p class="text-muted small mb-0">${sec.description || 'View all department tools and databases'}</p>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mt-4 pt-2 border-top">
+                  <span class="fw-semibold fs-7" style="color: var(--taco-dark);">Open Section Tools</span>
+                  <i class="bi bi-arrow-right fs-5" style="color: var(--taco-dark);"></i>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      contentContainer.innerHTML = `
+        <div class="mb-2">
+          <h6 class="fw-bold text-uppercase text-secondary fs-7 mb-3" style="letter-spacing: 0.5px;">Plant-Wide Core Monitors</h6>
+          <div class="row">${directCardsHTML || '<p class="text-muted small ms-3">No Tier 1 items configured.</p>'}</div>
+        </div>
+        <div class="mt-3">
+          <h6 class="fw-bold text-uppercase text-secondary fs-7 mb-3" style="letter-spacing: 0.5px;">Departmental Operations</h6>
+          <div class="row">${deptCardsHTML || '<p class="text-muted small ms-3">No Tier 2 items configured.</p>'}</div>
+        </div>
+      `;
+    }
+
+    // ==========================================
+    // TIER 2: RENDER SECTION DETAIL PAGE
+    // ==========================================
+    function openSectionDetail(sectionKey) {
+      CURRENT_VIEW = sectionKey;
+      const matchingSection = GLOBAL_PORTAL_DATA.find(s => s.sectionTitle.toLowerCase() === sectionKey.toLowerCase());
+      const style = getTheme(sectionKey);
+
+      const headerBar = document.getElementById('viewHeaderBar');
+      headerBar.innerHTML = `
+        <div class="col-md-8 d-flex align-items-center gap-3 mb-2 mb-md-0">
+          <button class="btn btn-back-home shadow-sm" onclick="renderHomeView()">
+            <i class="bi bi-arrow-left me-1"></i> Back to Main Portal
+          </button>
+          <h3 class="fw-bold m-0" style="color: var(--taco-dark);">${sectionKey}</h3>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+            <input type="text" id="searchInput" class="form-control border-start-0 ps-0" style="min-height: 44px;" placeholder="Search in ${sectionKey}..." onkeyup="filterLinks()">
+          </div>
+        </div>
+      `;
+
+      const contentContainer = document.getElementById('pageContent');
+      contentContainer.innerHTML = '';
+
+      if (!matchingSection) return;
+
+      let secHTML = `
+        <div class="section-block mb-5">
+          <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+            <i class="bi ${matchingSection.icon} fs-3" style="color: ${style.theme};"></i>
+            <h4 class="fw-bold m-0">${matchingSection.sectionTitle} Tools & Databases</h4>
+          </div>
+      `;
+
+      matchingSection.subAreas.forEach(sub => {
+        let cardsHTML = '';
+        sub.links.forEach(link => {
+          const isDash = link.type.toLowerCase() === 'dashboard';
+          const badgeClass = isDash ? 'badge-dashboard' : 'badge-database';
+          const avatarClass = isDash ? 'avatar-dashboard' : 'avatar-database';
+          const typeIcon = isDash ? 'bi-speedometer2' : 'bi-table';
+
+          let summaryFooterHTML = '';
+          if (link.summary && link.summary.trim().length > 0) {
+            summaryFooterHTML = `
+              <div class="px-3 pb-3">
+                <button class="btn btn-sneak-peek-toggle w-100 d-flex align-items-center justify-content-between" onclick="toggleSneakPeek(this)">
+                  <span class="d-flex align-items-center gap-1">
+                    <i class="bi bi-stars" style="color: var(--taco-orange);"></i>
+                    <span>Daily Sneak Peek</span>
+                  </span>
+                  <i class="bi bi-chevron-down toggle-icon"></i>
+                </button>
+                <div class="sneak-peek-box d-none">${formatSummaryText(link.summary)}</div>
+              </div>
+            `;
+          }
+
+          cardsHTML += `
+            <div class="col-12 col-md-6 col-xl-4 mb-4 target-card">
+              <div class="app-card-container shadow-sm">
+                <a href="${link.url}" target="_blank" class="card-header-link">
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="card-icon-avatar ${avatarClass}"><i class="bi ${typeIcon}"></i></div>
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="badge ${badgeClass} fs-7">${link.type}</span>
+                      <i class="bi bi-box-arrow-up-right text-muted fs-7"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <h6 class="fw-bold mb-1 text-truncate">${link.name}</h6>
+                    <small class="text-muted d-block text-truncate"><i class="bi bi-geo-alt me-1"></i>${sub.name}</small>
+                  </div>
+                </a>
+                ${summaryFooterHTML}
+              </div>
+            </div>
+          `;
+        });
+
+        secHTML += `
+          <div class="subarea-block mb-4">
+            <h5 class="subarea-title" style="border-left-color: ${style.theme};">${sub.name}</h5>
+            <div class="row">${cardsHTML}</div>
+          </div>
+        `;
+      });
+
+      secHTML += `</div>`;
+      contentContainer.innerHTML = secHTML;
+    }
+
+    function filterLinks() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      document.querySelectorAll('.target-card').forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(query) ? 'block' : 'none';
+      });
+    }
+
+    function handleError(error) {
+      document.getElementById('pageContent').innerHTML = `
+        <div class="text-center py-5 text-danger">
+          <i class="bi bi-exclamation-triangle fs-1"></i>
+          <p class="mt-2 fw-bold">Error connecting to Google API.</p>
+          <small>${error}</small>
+        </div>
+      `;
+      isDataLoaded = true;
+      tryDismissSplash();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      runSplashAnimation();
+      fetchPortalDataJSONP();
+    });
+  </script>
+</body>
+</html>
