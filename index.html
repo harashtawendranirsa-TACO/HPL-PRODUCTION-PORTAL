@@ -15,6 +15,8 @@
       --taco-orange: #DC440A;
       --taco-dark: #222423;
       --taco-blue: #00A3DE;
+      --taco-green: #AFD246;
+      --taco-yellow: #FFDD00;
       --taco-bg: #F8F9FA;
     }
 
@@ -24,6 +26,22 @@
       color: var(--taco-dark);
       padding-bottom: 4rem;
       overflow-x: hidden;
+    }
+
+    /* Enforce 48px minimum height for touch accessibility */
+    .form-control, .input-group-text {
+      min-height: 48px !important;
+    }
+    
+    .btn {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-sneak-peek-toggle {
+      justify-content: space-between !important;
     }
 
     /* SPLASH SCREEN */
@@ -44,7 +62,7 @@
     }
     .splash-progress-bar { width: 0%; height: 100%; background-color: var(--taco-orange); }
 
-    .taco-navbar { background-color: #ffffff !important; border-bottom: 1px solid #E2E8F0; padding: 0.85rem 1.75rem; }
+    .taco-navbar { padding: 0.75rem 1.5rem; }
 
     /* CARDS */
     .featured-card-container { border: 2px solid var(--card-theme, var(--taco-orange)) !important; background: linear-gradient(135deg, #ffffff 0%, var(--card-bg, #FFF5F2) 100%); }
@@ -77,7 +95,6 @@
 </head>
 <body>
 
-  <!-- SPLASH SCREEN -->
   <div id="splashScreen">
     <div class="splash-card">
       <img id="splashLogo" src="https://www.taco.co.id/_next/static/media/taco-icon.ceec1a53.svg" alt="TACO Logo" height="65" class="mb-3" style="opacity: 0;">
@@ -95,18 +112,21 @@
     </div>
   </div>
 
-  <!-- APP CONTAINER (HIDDEN INITIALLY) -->
   <div id="appContainer" style="display: none;">
-    <nav class="navbar taco-navbar sticky-top shadow-sm mb-4">
+    
+    <!-- TACO BRANDED NAVBAR -->
+    <nav class="navbar taco-navbar border-bottom mb-4" style="background-color: #ffffff; border-color: #e2e8f0 !important;">
       <div class="container-fluid d-flex align-items-center justify-content-between">
+        <!-- Left: Title & Division -->
         <div class="d-flex align-items-center gap-3">
-          <span class="fs-4 fw-bold" style="color: var(--taco-dark);">TAC PRODUCTION HPL PORTAL</span>
+          <span class="fs-5 fw-bold" style="color: var(--taco-dark);">TAC PRODUCTION HPL PORTAL</span>
           <span class="badge d-none d-md-inline-block" style="background-color: var(--taco-dark); color: #ffffff;">
             <i class="bi bi-person-circle me-1"></i><span id="navUserEmail"></span>
           </span>
         </div>
+        <!-- Right: TACO Logo -->
         <div class="d-flex align-items-center">
-          <img src="https://www.taco.co.id/_next/static/media/taco-icon.ceec1a53.svg" alt="TACO Logo" height="38">
+          <img src="https://www.taco.co.id/_next/static/media/taco-icon.ceec1a53.svg" alt="TACO Logo" height="36">
         </div>
       </div>
     </nav>
@@ -117,14 +137,20 @@
     </div>
   </div>
 
-  <!-- ACCESS DENIED CONTAINER (HIDDEN INITIALLY) -->
   <div id="deniedContainer" style="display: none; height: 100vh;">
-    <nav class="navbar taco-navbar shadow-sm">
+    <!-- TACO BRANDED NAVBAR FOR DENIED PAGE -->
+    <nav class="navbar taco-navbar border-bottom" style="background-color: #ffffff; border-color: #e2e8f0 !important;">
       <div class="container-fluid d-flex align-items-center justify-content-between">
-        <span class="fs-4 fw-bold" style="color: var(--taco-dark);">TAC PRODUCTION HPL PORTAL</span>
-        <img src="https://www.taco.co.id/_next/static/media/taco-icon.ceec1a53.svg" alt="TACO Logo" height="38">
+        <div class="d-flex align-items-center gap-3">
+          <span class="fs-5 fw-bold" style="color: var(--taco-dark);">TAC PRODUCTION HPL PORTAL</span>
+          <span class="badge" style="background-color: var(--taco-orange); color: #ffffff;">RESTRICTED AREA</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <img src="https://www.taco.co.id/_next/static/media/taco-icon.ceec1a53.svg" alt="TACO Logo" height="36">
+        </div>
       </div>
     </nav>
+
     <div class="container d-flex align-items-center justify-content-center">
       <div class="denied-card text-center shadow-sm">
         <div class="mb-3"><i class="bi bi-shield-lock-fill text-danger" style="font-size: 3.5rem;"></i></div>
@@ -143,7 +169,7 @@
 
   <script>
     // ⚠️ IMPORTANT: PASTE YOUR DEPLOYED WEB APP URL HERE ⚠️
-    const GOOGLE_API_URL = "https://script.google.com/a/macros/taco.co.id/s/AKfycbzz3yhrdI_IHA2bdkkH1lbdIwi5Wdx3SGcOLsX1f5h2Rm1tNz5UpVcZlzBXWD-GHHb3/exec";
+    const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbyVn-825vUq65sV20Y-F7wHkOSt5R51HlR5X5A2m3D_1_E7hZqK_p3c2p4i_9z/exec";
     
     let GLOBAL_PORTAL_DATA = [];
     let CURRENT_VIEW = "HOME";
@@ -208,7 +234,6 @@
     // JSONP API FETCHING
     // ==========================================
     function fetchPortalDataJSONP() {
-      // JSONP bypasses CORS issues when hosting frontend external to Google
       const script = document.createElement('script');
       const callbackName = 'jsonpCallback_' + Math.round(100000 * Math.random());
       
@@ -226,19 +251,16 @@
     }
 
     function handleAPIResponse(response) {
-      // Update UI Emails
       document.getElementById('splashUserEmail').textContent = response.email || "No Email Detected";
       document.getElementById('navUserEmail').textContent = response.email || "No Email Detected";
       document.getElementById('deniedUserEmail').textContent = response.email || "No Email Detected";
 
       if (!response.authorized) {
-        // Show Denied Screen
         document.getElementById('appContainer').style.display = 'none';
         document.getElementById('deniedContainer').style.display = 'block';
         isDataLoaded = true;
         tryDismissSplash();
       } else {
-        // Show Main App
         GLOBAL_PORTAL_DATA = response.data || [];
         document.getElementById('deniedContainer').style.display = 'none';
         document.getElementById('appContainer').style.display = 'block';
@@ -283,7 +305,6 @@
         const style = getTheme(sec.sectionTitle);
 
         if (sec.tier === 'TIER 1') {
-          // FEATURED DIRECT CARD
           const linkData = findDirectLinkData(sec.sectionTitle);
           const directUrl = linkData.url || "#";
           const summaryText = linkData.summary || "";
@@ -330,7 +351,6 @@
             </div>
           `;
         } else {
-          // DEPARTMENT SECTION CARD (TIER 2)
           deptCardsHTML += `
             <div class="col-12 col-md-4 mb-4">
               <div class="home-category-card shadow-sm" style="--card-theme: ${style.theme}; --card-bg: ${style.bg}; --card-border: ${style.border};" onclick="openSectionDetail('${sec.sectionTitle}')">
@@ -383,7 +403,7 @@
         <div class="col-md-4">
           <div class="input-group">
             <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-            <input type="text" id="searchInput" class="form-control border-start-0 ps-0" style="min-height: 44px;" placeholder="Search in ${sectionKey}..." onkeyup="filterLinks()">
+            <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="Search in ${sectionKey}..." onkeyup="filterLinks()">
           </div>
         </div>
       `;
